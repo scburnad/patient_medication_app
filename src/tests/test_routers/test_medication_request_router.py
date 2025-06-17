@@ -146,6 +146,45 @@ class TestCreateMedicationRequest:
         assert response.status_code == 404
         assert "Patient with id 999 not found" in response.json()["detail"]
 
+    def test_create_medication_request_invalid_clinician(
+        self, client, db_session: Session, sample_patient, sample_medication
+    ):
+        request_data = {
+            "patient_reference": sample_patient.id,
+            "clinician_reference": "MD00001",  # Non-existent clinician
+            "medication_reference": sample_medication.code,
+            "reason": "Test reason",
+            "prescribed_date": "2025-06-16",
+            "start_date": "2025-06-16",
+            "frequency": "twice daily",
+            "status": "active",
+        }
+
+        response = client.post("/medication-requests/", json=request_data)
+        assert response.status_code == 404
+        assert (
+            "Clinician with registration ID MD00001 not found"
+            in response.json()["detail"]
+        )
+
+    def test_create_medication_request_invalid_medication(
+        self, client, db_session: Session, sample_patient, sample_clinician
+    ):
+        request_data = {
+            "patient_reference": sample_patient.id,
+            "clinician_reference": sample_clinician.registration_id,
+            "medication_reference": "MED00001",  # Non-existent medication
+            "reason": "Test reason",
+            "prescribed_date": "2025-06-16",
+            "start_date": "2025-06-16",
+            "frequency": "twice daily",
+            "status": "active",
+        }
+
+        response = client.post("/medication-requests/", json=request_data)
+        assert response.status_code == 404
+        assert "Medication with code MED00001 not found" in response.json()["detail"]
+
 
 class TestGetMedicationRequests:
     def test_get_medication_requests_no_filters(
