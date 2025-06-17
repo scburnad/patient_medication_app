@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "Patient-Medication-App"
+version = "0.1.0"
+description = "Service to record patient medication info"
+authors = ["Adrian Burns <adrian.burns@burnsdigital.co.uk>"]
+readme = "README.md"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["standard"], version = "^0.115.12"}
+uvicorn = "^0.34.2"
+sqlalchemy = "^2.0.41"
+psycopg2-binary = "^2.9.10"
+pydantic = "^2.11.5"
+pydantic-settings = "^2.9.1"
+alembic = "^1.15.1"
+sqlalchemy-utils = "^0.41.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest-asyncio = "^0.25.3"
+pytest = "^8.3.5"
+pytest-cov = "^6.0.0"
+black = "^25.1.0"
+
+[tool.black]
+extend-exclude = '''
+/(
+  src/migrations/versions/
+)
+'''
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
