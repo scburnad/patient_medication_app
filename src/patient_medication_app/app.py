@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 
+from patient_medication_app.api import api_router
+
 app = FastAPI(
     title="Patient Medication", description="Patient Medication API", version="0.1.0"
 )
+
+app.include_router(api_router, tags=["api"])
 
 
 @app.get("/healthcheck")
